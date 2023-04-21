@@ -28,7 +28,12 @@ err_capthick=1.5
 # set fig size
 figsize=(6.4, 4.8)
 
-def myBarPlot(df, x, y, hue="", xlim = "", ylim = "", xlabel = "", ylabel = "", loc='lower right', doplot = False, saveDir = "", saveImgName = ""):
+def nmslBarPlot(df, x, y, hue="", 
+                xlim = "", ylim = "", 
+                xlabel = "", ylabel = "", 
+                loc='lower right', 
+                savePlot = False, showPlot = False, showResults = True,
+                saveDir = "", saveImgName = ""):
     
     plt.figure(figsize=figsize)
     
@@ -81,8 +86,9 @@ def myBarPlot(df, x, y, hue="", xlim = "", ylim = "", xlabel = "", ylabel = "", 
             all_stds.append(value_stds)
             all_cis.append(value_cis)
         
-        print(f"mean: {all_means}")
-        print(f"ci: {all_cis}")
+        if showResults:
+            print(f"mean: {all_means}")
+            print(f"ci: {all_cis}")
 
         for idx in range(len(hues)):
             bars.append(plt.bar(x_axis+x_axis_offset[idx], all_means[idx], yerr=all_cis[idx], \
@@ -110,8 +116,9 @@ def myBarPlot(df, x, y, hue="", xlim = "", ylim = "", xlabel = "", ylabel = "", 
             value_stds.append(std)
             value_cis.append(ci_offset)
         
-        print(f"mean: {value_means}")
-        print(f"ci: {value_cis}")
+        if showResults:
+            print(f"mean: {value_means}")
+            print(f"ci: {value_cis}")
         
         bars.append(plt.bar(x_axis, value_means, yerr=value_cis, \
                             error_kw=dict(lw=err_lw, capsize=err_capsize, capthick=err_capthick, ecolor=errorbar_color), \
@@ -132,7 +139,7 @@ def myBarPlot(df, x, y, hue="", xlim = "", ylim = "", xlabel = "", ylabel = "", 
         plt.legend(bars, hues, title='', loc=loc)
     # plt.title("Template") // usually don't use in paper
     
-    if doplot:
+    if savePlot:
         # create saveDir
         if saveDir:
             saveDir.mkdir(exist_ok=True, parents=True)
@@ -142,4 +149,6 @@ def myBarPlot(df, x, y, hue="", xlim = "", ylim = "", xlabel = "", ylabel = "", 
         plt.savefig(f'{saveDir}/{saveImgName}.png', dpi=300, pad_inches=0, bbox_inches='tight')
                         
     # Show the plot
-    plt.show()
+    if showPlot:
+        plt.show()
+    plt.clf()
