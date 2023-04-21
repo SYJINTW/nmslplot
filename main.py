@@ -19,6 +19,8 @@ if __name__ == "__main__":
             savePlot = True, showPlot = False,
             saveDir = saveFigDir, saveImgName = "without_hue_value1"
             )
+    
+    exit()
 
     # barplot with hue, Y is Value1
     nmslplot.nmslBarPlot(

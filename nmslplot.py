@@ -73,10 +73,15 @@ def nmslBarPlot(df, x, y, hue="",
                 # Calculate standard deviation
                 std = filtered_df[y].std(ddof=1)  # use ddof=1 for sample standard deviation
                 
-                # Calculate the 95% confidence interval using the t-distribution
-                n = len(df)
-                t_value = stats.t.ppf(0.975, n-1)  # use 0.975 for a two-tailed test
-                ci_offset = t_value * (std / (n**0.5)) * 2
+                # # Calculate the 95% confidence interval using the t-distribution
+                # n = len(df)
+                # t_value = stats.t.ppf(0.975, n-1)  # use 0.975 for a two-tailed test
+                # ci_offset = t_value * (std / (n**0.5)) * 2
+                
+                # Calculate the confidence interval (95%)
+                sem = stats.sem(filtered_df[y])
+                ci = stats.t.interval(0.95, len(filtered_df[y])-1, loc=np.mean(filtered_df[y]), scale=sem)
+                ci_offset = ci[1] - mean
                 
                 value_means.append(mean)
                 value_stds.append(std)
@@ -95,6 +100,7 @@ def nmslBarPlot(df, x, y, hue="",
                                 error_kw=dict(lw=err_lw, capsize=err_capsize, capthick=err_capthick, ecolor=errorbar_color), \
                                 width=bar_width, color=color_palette[idx]))
 
+    # -------------------------------- without hue ------------------------------- #
     else:
         value_means = []
         value_stds = []
@@ -107,11 +113,16 @@ def nmslBarPlot(df, x, y, hue="",
             # Calculate standard deviation
             std = filtered_df[y].std(ddof=1)  # use ddof=1 for sample standard deviation
             
-            # Calculate the 95% confidence interval using the t-distribution
-            n = len(df)
-            t_value = stats.t.ppf(0.975, n-1)  # use 0.975 for a two-tailed test
-            ci_offset = t_value * (std / (n**0.5)) * 2
-            
+            # # Calculate the 95% confidence interval using the t-distribution
+            # n = len(df)
+            # t_value = stats.t.ppf(0.975, n-1)  # use 0.975 for a two-tailed test
+            # ci_offset = t_value * (std / (n**0.5)) * 2
+
+            # Calculate the confidence interval (95%)
+            sem = stats.sem(filtered_df[y])
+            ci = stats.t.interval(0.95, len(filtered_df[y])-1, loc=np.mean(filtered_df[y]), scale=sem)
+            ci_offset = ci[1] - mean
+
             value_means.append(mean)
             value_stds.append(std)
             value_cis.append(ci_offset)
@@ -120,6 +131,9 @@ def nmslBarPlot(df, x, y, hue="",
             print(f"mean: {value_means}")
             print(f"ci: {value_cis}")
         
+        # # testing
+        # value_cis = [20, 2.516685584318424, 2.438033275506282, 2.4103036018749524, 2.305076802098602]
+
         bars.append(plt.bar(x_axis, value_means, yerr=value_cis, \
                             error_kw=dict(lw=err_lw, capsize=err_capsize, capthick=err_capthick, ecolor=errorbar_color), \
                             width=bar_width, color=color_palette[0]))
