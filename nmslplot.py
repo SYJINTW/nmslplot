@@ -92,8 +92,11 @@ def nmslBarPlot(df, x, y, hue="",
             all_cis.append(value_cis)
         
         if showResults:
-            print(f"mean: {all_means}")
-            print(f"ci: {all_cis}")
+            print(f"categories: {categories}")
+            print(f"hues: {hues}")
+            print(f"mean: {value_means}")
+            print(f"std: {value_stds}")
+            print(f"ci: {value_cis}")
 
         for idx in range(len(hues)):
             bars.append(plt.bar(x_axis+x_axis_offset[idx], all_means[idx], yerr=all_cis[idx], \
@@ -128,7 +131,9 @@ def nmslBarPlot(df, x, y, hue="",
             value_cis.append(ci_offset)
         
         if showResults:
+            print(f"categories: {categories}")
             print(f"mean: {value_means}")
+            print(f"std: {value_stds}")
             print(f"ci: {value_cis}")
         
         # # testing
